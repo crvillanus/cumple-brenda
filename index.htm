@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Confirmación Cumple Brenda</title>
+
+<style>
+:root{
+  --bg:#181818;
+  --card:#202020;
+  --text:#ffffff;
+  --muted:#b5b5b5;
+
+  --yes:#30bbed;
+  --no:#de4e9b;
+
+  --confirm:#f6ed5f;
+  --confirmText:#000000;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+
+.card{
+  width:100%;
+  max-width:520px;
+  background:var(--card);
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 40px rgba(0,0,0,.4);
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+}
+
+.content{padding:22px}
+
+h1{
+  font-size:22px;
+  margin:0 0 8px;
+  text-align:center;
+}
+
+.subtitle{
+  text-align:center;
+  font-size:14px;
+  color:var(--muted);
+  margin-bottom:20px;
+}
+
+.buttons{
+  display:flex;
+  gap:12px;
+}
+
+button{
+  flex:1;
+  padding:14px;
+  border:2px solid transparent;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+  font-size:16px;
+  transition:.2s ease;
+}
+
+.btn-yes{background:var(--yes);color:#fff}
+.btn-no{background:var(--no);color:#fff}
+
+button:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+}
+
+button.active{
+  border:2px solid #fff;
+}
+
+.hidden{display:none}
+
+form{margin-top:10px}
+
+label{
+  font-size:14px;
+  margin-bottom:6px;
+  display:block;
+  color:var(--muted);
+}
+
+input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin-bottom:14px;
+}
+
+.section{margin-bottom:18px}
+
+.toggle{
+  display:flex;
+  gap:10px;
+}
+
+.toggle button{
+  font-size:14px;
+  padding:10px;
+}
+
+.submit{
+  background:var(--confirm);
+  color:var(--confirmText);
+  width:100%;
+  margin-top:10px;
+}
+
+.success{
+  color:#fff;
+  text-align:center;
+  margin-top:14px;
+  font-size:16px;
+}
+
+.noText{
+  color:#fff;
+  text-align:center;
+  font-size:20px;
+  margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="https://i.imgur.com/u6X0BCy.jpeg" alt="Cumple Brenda">
+
+  <div class="content">
+
+    <!-- DECISIÓN -->
+    <div id="decision">
+      <h1>¿Confirmas tu asistencia<br>al cumpleaños de Brenda?</h1>
+      <p class="subtitle">Necesitamos saber si contamos contigo 🎉</p>
+
+      <div class="buttons">
+        <button id="btnYes" class="btn-yes" type="button">Sí, voy</button>
+        <button id="btnNo" class="btn-no" type="button">No puedo</button>
+      </div>
+    </div>
+
+    <!-- FORMULARIO FORMSPREE -->
+    <form
+      id="form"
+      action="https://formspree.io/f/xzdpbdby"
+      method="POST"
+      class="hidden">
+
+      <!-- Campo oculto para saber que asistió -->
+      <input type="hidden" name="asistencia" value="SI">
+
+      <div class="section">
+        <label>Nombres completos</label>
+        <input type="text" name="nombre" required>
+      </div>
+
+      <div class="section">
+        <label>DNI</label>
+        <input type="text" name="dni" pattern="[0-9]{8}" required>
+      </div>
+
+      <div class="section">
+        <label>¿Llevarás acompañante?</label>
+        <div class="toggle">
+          <button id="guestYes" type="button" class="btn-yes">Sí</button>
+          <button id="guestNo" type="button" class="btn-no">No</button>
+        </div>
+      </div>
+
+      <div id="guest" class="hidden">
+        <div class="section">
+          <label>Nombre del acompañante</label>
+          <input type="text" name="acompanante_nombre">
+        </div>
+
+        <div class="section">
+          <label>DNI del acompañante</label>
+          <input type="text" name="acompanante_dni" pattern="[0-9]{8}">
+        </div>
+      </div>
+
+      <button class="submit" type="submit">Confirmar asistencia</button>
+
+      <div id="successMsg" class="success hidden">
+        💜 Gracias por confirmar tu asistencia
+      </div>
+    </form>
+
+    <!-- MENSAJE NO -->
+    <div id="noMessage" class="noText hidden">
+      gracias por nada 😢
+    </div>
+
+  </div>
+</div>
+
+<script>
+const decision = document.getElementById("decision");
+const form = document.getElementById("form");
+const noMessage = document.getElementById("noMessage");
+const successMsg = document.getElementById("successMsg");
+
+const btnYes = document.getElementById("btnYes");
+const btnNo = document.getElementById("btnNo");
+const guestYes = document.getElementById("guestYes");
+const guestNo = document.getElementById("guestNo");
+const guest = document.getElementById("guest");
+
+function setActive(group, active){
+  group.forEach(b => b.classList.remove("active"));
+  active.classList.add("active");
+}
+
+btnYes.onclick = () => {
+  setActive([btnYes, btnNo], btnYes);
+  decision.classList.add("hidden");
+  noMessage.classList.add("hidden");
+  form.classList.remove("hidden");
+  setActive([guestYes, guestNo], guestNo);
+  guest.classList.add("hidden");
+};
+
+btnNo.onclick = () => {
+  setActive([btnYes, btnNo], btnNo);
+  decision.classList.add("hidden");
+  form.classList.add("hidden");
+  noMessage.classList.remove("hidden");
+};
+
+guestYes.onclick = () => {
+  setActive([guestYes, guestNo], guestYes);
+  guest.classList.remove("hidden");
+};
+
+guestNo.onclick = () => {
+  setActive([guestYes, guestNo], guestNo);
+  guest.classList.add("hidden");
+};
+
+/* ENVÍO + MENSAJE DE GRACIAS */
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  if(!form.checkValidity()) return;
+
+  const data = new FormData(form);
+
+  fetch(form.action, {
+    method: "POST",
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  })
+  .then(response => {
+    if (response.ok) {
+      successMsg.classList.remove("hidden");
+      form.querySelector(".submit").disabled = true;
+    } else {
+      alert("Error al enviar el formulario");
+    }
+  })
+  .catch(() => alert("Error de conexión"));
+});
+</script>
+
+</body>
+</html>
