@@ -1,289 +1,395 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Confirmación Cumple Brenda</title>
-
+<title>Sobre Animado</title>
 <style>
-:root{
-  --bg:#181818;
-  --card:#202020;
-  --text:#ffffff;
-  --muted:#b5b5b5;
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  --yes:#30bbed;
-  --no:#de4e9b;
+  body {
+    height: 400vh;
+    background: #f5f0eb;
+    font-family: 'Georgia', serif;
+  }
 
-  --confirm:#f6ed5f;
-  --confirmText:#000000;
-}
+  .sticky-container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
 
-*{box-sizing:border-box}
+  .scene {
+    position: relative;
+    width: 380px;
+    height: 260px;
+  }
 
-body{
-  margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100vh;
+  /* ── LETTER ── */
+  .letter {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    background: #fffdf8;
+    border-radius: 4px;
+    padding: 32px 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+    /* starts hidden inside the envelope */
+    bottom: 60px;
+    z-index: 12;
+    transition: none;
+    /* clip so it stays hidden below envelope top initially */
+    clip-path: inset(100% 0 0 0);
+  }
+
+  .letter-inner {
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .birthday-photo{
   display:flex;
   justify-content:center;
-  align-items:center;
-  padding:20px;
-}
-
-.card{
-  width:100%;
-  max-width:520px;
-  background:var(--card);
-  border-radius:18px;
-  overflow:hidden;
-  box-shadow:0 20px 40px rgba(0,0,0,.4);
-}
-
-.card img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-}
-
-.content{padding:22px}
-
-h1{
-  font-size:22px;
-  margin:0 0 8px;
-  text-align:center;
-}
-
-.subtitle{
-  text-align:center;
-  font-size:14px;
-  color:var(--muted);
   margin-bottom:20px;
 }
 
-.buttons{
-  display:flex;
-  gap:12px;
+.birthday-photo img{
+  width:120px;
+  height:120px;
+  object-fit:cover;
+  border-radius:50%;
+  border:4px solid #c8922a;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
 
-button{
-  flex:1;
-  padding:14px;
-  border:2px solid transparent;
-  border-radius:12px;
-  font-weight:600;
-  cursor:pointer;
-  font-size:16px;
-  transition:.2s ease;
-}
-
-.btn-yes{background:var(--yes);color:#fff}
-.btn-no{background:var(--no);color:#fff}
-
-button:hover{
-  transform:translateY(-2px);
-  filter:brightness(1.08);
-}
-
-button.active{
-  border:2px solid #fff;
-}
-
-.hidden{display:none}
-
-form{margin-top:10px}
-
-label{
-  font-size:14px;
-  margin-bottom:6px;
-  display:block;
-  color:var(--muted);
-}
-
-input{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  margin-bottom:14px;
-}
-
-.section{margin-bottom:18px}
-
-.toggle{
-  display:flex;
-  gap:10px;
-}
-
-.toggle button{
-  font-size:14px;
-  padding:10px;
-}
-
-.submit{
-  background:var(--confirm);
-  color:var(--confirmText);
-  width:100%;
-  margin-top:10px;
-}
-
-.success{
-  color:#fff;
+.letter .saludo{
   text-align:center;
-  margin-top:14px;
-  font-size:16px;
+  font-size:18px;
+  color:#002345;
+  margin-bottom:18px;
 }
 
-.noText{
-  color:#fff;
+.letter p{
   text-align:center;
-  font-size:20px;
-  margin-top:20px;
 }
+
+  .letter p {
+    font-size: 13px;
+    color: #4a3728;
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+
+  .letter .saludo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #002345;
+    margin-bottom: 14px;
+  }
+
+  .letter .firma {
+    margin-top: 20px;
+    font-style: italic;
+    font-size: 12px;
+    color: #888;
+  }
+
+  /* ── ENVELOPE BODY ── */
+  .envelope {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 380px;
+    height: 240px;
+    z-index: 10;
+  }
+
+  /* Back of envelope */
+  .env-back {
+    position: absolute;
+    inset: 0;
+    background: #c8922a;
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+    overflow: hidden;
+  }
+
+  /* Diagonal texture lines */
+  .env-back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 6px,
+      rgba(0,0,0,0.07) 6px,
+      rgba(0,0,0,0.07) 7px
+    );
+  }
+
+  /* Bottom triangle fold */
+  .env-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 190px solid transparent;
+    border-right: 190px solid transparent;
+    border-bottom: 130px solid #b07d1f;
+    z-index: 3;
+  }
+
+  /* Left triangle fold */
+  .env-left {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 120px solid transparent;
+    border-bottom: 120px solid transparent;
+    border-left: 195px solid #c08020;
+    z-index: 2;
+  }
+
+  /* Right triangle fold */
+  .env-right {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-top: 120px solid transparent;
+    border-bottom: 120px solid transparent;
+    border-right: 195px solid #b87720;
+    z-index: 2;
+  }
+
+  /* ── FLAP (top triangle) ── */
+  .env-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 380px;
+    height: 200px;
+    transform-origin: top center;
+    z-index: 20;
+    /* perspective for 3d fold */
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .env-flap-inner {
+    width: 0;
+    height: 0;
+    border-left: 190px solid transparent;
+    border-right: 190px solid transparent;
+    border-top: 160px solid #d4982e;
+    position: relative;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+
+  /* Diagonal texture on flap */
+  .env-flap-inner::before {
+    content: '';
+    position: absolute;
+    top: -160px;
+    left: -190px;
+    width: 380px;
+    height: 160px;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 6px,
+      rgba(0,0,0,0.06) 6px,
+      rgba(0,0,0,0.06) 7px
+    );
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  }
+
+  /* Seal circle */
+  .seal {
+    position: absolute;
+    top: -110px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 36px;
+    background: #002345;
+    border-radius: 50%;
+    border: 2px solid #ffd700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
+    transition: opacity 0.3s;
+  }
+
+  .seal span {
+    color: #ffd700;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+
+  /* ── SCROLL HINT ── */
+  .scroll-hint {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: #8a7060;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    opacity: 1;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+
+  .scroll-hint .arrow {
+    display: block;
+    margin: 6px auto 0;
+    width: 20px;
+    height: 20px;
+    border-right: 2px solid #b07d1f;
+    border-bottom: 2px solid #b07d1f;
+    transform: rotate(45deg);
+    animation: bounce 1.4s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: rotate(45deg) translateY(0); }
+    50%       { transform: rotate(45deg) translateY(5px); }
+  }
 </style>
 </head>
-
 <body>
 
-<div class="card">
-  <img src="https://i.imgur.com/u6X0BCy.jpeg" alt="Cumple Brenda">
+<div class="sticky-container">
+  <div class="scene">
 
-  <div class="content">
+    <!-- LETTER (behind envelope) -->
+<div class="letter" id="letter">
+  <div class="letter-inner" id="letterInner">
 
-    <!-- DECISIÓN -->
-    <div id="decision">
-      <h1>¿Confirmas tu asistencia<br>al cumpleaños de Brenda?</h1>
-      <p class="subtitle">Necesitamos saber si contamos contigo 🎉</p>
-
-      <div class="buttons">
-        <button id="btnYes" class="btn-yes" type="button">Sí, voy</button>
-        <button id="btnNo" class="btn-no" type="button">No puedo</button>
-      </div>
+    <div class="birthday-photo">
+      <img src="https://i.imgur.com/TlfXjt0.jpeg" alt="Enna Liliana Vásquez Saldarriaga">
     </div>
 
-    <!-- FORMULARIO FORMSPREE -->
-    <form
-      id="form"
-      action="https://formspree.io/f/xzdpbdby"
-      method="POST"
-      class="hidden">
+    <p class="saludo">¡Estás cordialmente invitado!</p>
 
-      <!-- Campo oculto para saber que asistió -->
-      <input type="hidden" name="asistencia" value="SI">
+    <p>
+      Te invitamos a celebrar los
+      <strong>60 años de vida</strong>
+      de
+      <strong>Enna Liliana Vásquez Saldarriaga</strong>.
+    </p>
 
-      <div class="section">
-        <label>Nombres completos</label>
-        <input type="text" name="nombre" required>
+    <p>
+      Será una noche especial llena de alegría,
+      recuerdos y momentos inolvidables junto a
+      familiares y amigos.
+    </p>
+
+    <p>
+      <strong>Lugar:</strong><br>
+      Miguel Ortiz 648
+    </p>
+
+    <p class="firma">
+      ¡Te esperamos!
+    </p>
+
+  </div>
+</div>
+
+    <!-- ENVELOPE -->
+    <div class="envelope" id="envelope">
+      <div class="env-back">
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+        <div class="env-bottom"></div>
       </div>
 
-      <div class="section">
-        <label>DNI</label>
-        <input type="text" name="dni" pattern="[0-9]{8}" required>
-      </div>
-
-      <div class="section">
-        <label>¿Llevarás acompañante?</label>
-        <div class="toggle">
-          <button id="guestYes" type="button" class="btn-yes">Sí</button>
-          <button id="guestNo" type="button" class="btn-no">No</button>
+      <!-- FLAP -->
+      <div class="env-flap" id="flap">
+        <div class="env-flap-inner">
+          <div class="seal" id="seal">
+            <span>Q</span>
+          </div>
         </div>
       </div>
-
-      <div id="guest" class="hidden">
-        <div class="section">
-          <label>Nombre del acompañante</label>
-          <input type="text" name="acompanante_nombre">
-        </div>
-
-        <div class="section">
-          <label>DNI del acompañante</label>
-          <input type="text" name="acompanante_dni" pattern="[0-9]{8}">
-        </div>
-      </div>
-
-      <button class="submit" type="submit">Confirmar asistencia</button>
-
-      <div id="successMsg" class="success hidden">
-        💜 Gracias por confirmar tu asistencia
-      </div>
-    </form>
-
-    <!-- MENSAJE NO -->
-    <div id="noMessage" class="noText hidden">
-      gracias por nada 😢
     </div>
 
   </div>
 </div>
 
+<div class="scroll-hint" id="scrollHint">
+  Desplázate para abrir
+  <span class="arrow"></span>
+</div>
+
 <script>
-const decision = document.getElementById("decision");
-const form = document.getElementById("form");
-const noMessage = document.getElementById("noMessage");
-const successMsg = document.getElementById("successMsg");
+  const flap       = document.getElementById('flap');
+  const letter     = document.getElementById('letter');
+  const letterInner = document.getElementById('letterInner');
+  const seal       = document.getElementById('seal');
+  const scrollHint = document.getElementById('scrollHint');
 
-const btnYes = document.getElementById("btnYes");
-const btnNo = document.getElementById("btnNo");
-const guestYes = document.getElementById("guestYes");
-const guestNo = document.getElementById("guestNo");
-const guest = document.getElementById("guest");
+  // Scroll ranges (in px of page scroll)
+  const FLAP_START  = 80;   // flap starts opening
+  const FLAP_END    = 280;  // flap fully open
+  const LETTER_START = 200; // letter starts rising
+  const LETTER_END   = 600; // letter fully out
 
-function setActive(group, active){
-  group.forEach(b => b.classList.remove("active"));
-  active.classList.add("active");
-}
+  function lerp(a, b, t) {
+    return a + (b - a) * Math.min(Math.max(t, 0), 1);
+  }
 
-btnYes.onclick = () => {
-  setActive([btnYes, btnNo], btnYes);
-  decision.classList.add("hidden");
-  noMessage.classList.add("hidden");
-  form.classList.remove("hidden");
-  setActive([guestYes, guestNo], guestNo);
-  guest.classList.add("hidden");
-};
+  function onScroll() {
+    const y = window.scrollY;
 
-btnNo.onclick = () => {
-  setActive([btnYes, btnNo], btnNo);
-  decision.classList.add("hidden");
-  form.classList.add("hidden");
-  noMessage.classList.remove("hidden");
-};
+    // ── Flap animation (rotates back around top edge) ──
+    const flapProgress = (y - FLAP_START) / (FLAP_END - FLAP_START);
+    const flapAngle    = lerp(0, -180, Math.min(Math.max(flapProgress, 0), 1));
+    flap.style.transform = `perspective(600px) rotateX(${flapAngle}deg)`;
+    // Send flap behind envelope body when >90°
+    flap.style.zIndex = flapAngle < -90 ? 0 : 20;
+    seal.style.opacity = flapProgress > 0.2 ? 0 : 1;
 
-guestYes.onclick = () => {
-  setActive([guestYes, guestNo], guestYes);
-  guest.classList.remove("hidden");
-};
+    // ── Letter animation ──
+    const letterProgress = (y - LETTER_START) / (LETTER_END - LETTER_START);
+    const clampedLP = Math.min(Math.max(letterProgress, 0), 1);
 
-guestNo.onclick = () => {
-  setActive([guestYes, guestNo], guestNo);
-  guest.classList.add("hidden");
-};
+    // clip-path: reveal from bottom upward
+    const clipTop = lerp(100, -10, clampedLP); // from fully hidden to fully visible
+    letter.style.clipPath = `inset(${Math.max(clipTop, 0)}% 0 0 0)`;
 
-/* ENVÍO + MENSAJE DE GRACIAS */
-form.addEventListener("submit", e => {
-  e.preventDefault();
-  if(!form.checkValidity()) return;
+    // Lift letter up
+    const lift = lerp(60, -120, clampedLP);
+    letter.style.bottom = lift + 'px';
 
-  const data = new FormData(form);
+    // Fade in text once letter is mostly out
+    letterInner.style.opacity = clampedLP > 0.6
+      ? ((clampedLP - 0.6) / 0.4).toFixed(2)
+      : 0;
 
-  fetch(form.action, {
-    method: "POST",
-    body: data,
-    headers: { 'Accept': 'application/json' }
-  })
-  .then(response => {
-    if (response.ok) {
-      successMsg.classList.remove("hidden");
-      form.querySelector(".submit").disabled = true;
-    } else {
-      alert("Error al enviar el formulario");
-    }
-  })
-  .catch(() => alert("Error de conexión"));
-});
+    // Hide scroll hint
+    scrollHint.style.opacity = y > 60 ? 0 : 1;
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll(); // init state
 </script>
-
 </body>
 </html>
